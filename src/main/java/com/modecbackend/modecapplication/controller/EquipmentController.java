@@ -27,7 +27,7 @@ public class EquipmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Equipment> createEquipment(@RequestBody Equipment equipment) {
+    public ResponseEntity<Equipment> createEquipment(@RequestBody Equipment equipment) throws Exception {
         return ResponseEntity.ok().body(this.equipmentService.createEquipment(equipment));
     }
 

@@ -4,4 +4,6 @@ import com.modecbackend.modecapplication.model.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
+
+    Equipment findByCode(String code);
 }

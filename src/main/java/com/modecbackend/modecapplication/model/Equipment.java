@@ -19,6 +19,9 @@ public class Equipment {
     @Column(name = "location")
     private String location;
 
+    @Enumerated(EnumType.STRING)
+    private EquipmentStatus status;
+
     public long getId() {
         return id;
     }
@@ -49,5 +52,13 @@ public class Equipment {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public EquipmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EquipmentStatus status) {
+        this.status = status;
     }
 }

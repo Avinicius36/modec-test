@@ -5,7 +5,7 @@ import com.modecbackend.modecapplication.model.Equipment;
 import java.util.List;
 
 public interface EquipmentService {
-    Equipment createEquipment(Equipment equipment);
+    Equipment createEquipment(Equipment equipment) throws Exception;
 
     Equipment updateEquipment(Equipment equipment);
 

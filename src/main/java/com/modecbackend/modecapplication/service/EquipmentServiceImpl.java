@@ -1,7 +1,8 @@
 package com.modecbackend.modecapplication.service;
 
-import com.modecbackend.modecapplication.exception.ResourceNotFoundException;
+import com.modecbackend.modecapplication.exception.ApiRequestException;
 import com.modecbackend.modecapplication.model.Equipment;
+import com.modecbackend.modecapplication.model.EquipmentStatus;
 import com.modecbackend.modecapplication.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,14 @@ public class EquipmentServiceImpl implements EquipmentService {
     private EquipmentRepository equipmentRepository;
 
     @Override
-    public Equipment createEquipment(Equipment equipment) {
-       return equipmentRepository.save(equipment);
+    public Equipment createEquipment(Equipment equipment) throws Exception {
+        Equipment existentEquipment = equipmentRepository.findByCode(equipment.getCode());
+
+        if (existentEquipment != null && !existentEquipment.equals(equipment)) {
+            throw new ApiRequestException("This code already exists in Database, please consider changing the code");
+        }
+        equipment.setStatus(EquipmentStatus.ACTIVE);
+        return equipmentRepository.save(equipment);
     }
 
     @Override
@@ -37,7 +44,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
             return equipmentUpdate;
         } else {
-            throw new ResourceNotFoundException("Equipment not found with id: " + equipment.getId());
+            throw new ApiRequestException("Equipment not found with id: " + equipment.getId());
         }
     }
 
@@ -53,7 +60,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         if (equipmentDb.isPresent()) {
             return equipmentDb.get();
         } else {
-            throw new ResourceNotFoundException("Equipment not found with id: " + equipmentId);
+            throw new ApiRequestException("Equipment not found with id: " + equipmentId);
         }
     }
 
@@ -64,7 +71,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         if (equipmentDb.isPresent()) {
             this.equipmentRepository.delete(equipmentDb.get());
         } else {
-            throw new ResourceNotFoundException("Equipment not found with id: " + equipmentId);
+            throw new ApiRequestException("Equipment not found with id: " + equipmentId);
         }
     }
 }
