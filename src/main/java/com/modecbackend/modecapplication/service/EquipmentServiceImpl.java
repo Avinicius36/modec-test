@@ -3,6 +3,7 @@ package com.modecbackend.modecapplication.service;
 import com.modecbackend.modecapplication.exception.ApiRequestException;
 import com.modecbackend.modecapplication.model.Equipment;
 import com.modecbackend.modecapplication.model.EquipmentStatus;
+import com.modecbackend.modecapplication.model.Vessel;
 import com.modecbackend.modecapplication.repository.EquipmentRepository;
 import com.modecbackend.modecapplication.repository.VesselRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +41,15 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public Equipment updateEquipment(Equipment equipment) {
-        List<Equipment> equipmentsToValidate = equipmentRepository.findAll();
-        validateNames(equipmentsToValidate, equipment.getCode());
+    public Equipment updateEquipment(Equipment equipment, Long vesselId, Long id) {
 
-        Optional<Equipment> equipmentDb = this.equipmentRepository.findById(equipment.getId());
-        if (equipmentDb.isPresent()) {
-            Equipment equipmentUpdate = equipmentDb.get();
-            equipmentUpdate.setId(equipment.getId());
+        Vessel vessel = this.vesselRepository.findById(vesselId).orElseThrow(EntityNotFoundException::new);
+
+        Equipment equipmentUpdate = equipmentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+         if(equipmentUpdate != null) {
+
+            equipmentUpdate.setId(id);
             equipmentUpdate.setName(equipment.getName());
             equipmentUpdate.setCode(equipment.getCode());
             equipment.setLocation(equipment.getLocation());
@@ -60,14 +62,6 @@ public class EquipmentServiceImpl implements EquipmentService {
         }
     }
 
-    private boolean validateNames(final List<Equipment> list, final String code) {
-        Boolean checkingIfNameIsPresent = list.stream().filter(o -> o.getCode().equals(code)).findFirst().isPresent();
-        if(checkingIfNameIsPresent == true) {
-            throw new ApiRequestException("This code already exists in Database, please consider changing the code");
-        } else {
-            return false;
-        }
-    }
 
     @Override
     public List<Equipment> getAllEquipment(final Long id) throws EntityNotFoundException {
@@ -81,7 +75,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public Equipment getEquipmentById(long equipmentId) {
+    public Equipment getEquipmentById(Long equipmentId) {
         Optional<Equipment> equipmentDb = this.equipmentRepository.findById(equipmentId);
 
         if (equipmentDb.isPresent()) {
@@ -92,13 +86,13 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public void deleteEquipment(long equipmentId) {
-        Optional<Equipment> equipmentDb = this.equipmentRepository.findById(equipmentId);
+        public void deleteEquipment(Long vesselId, Long equipmentId) {
+            Optional<Equipment> equipmentDb = this.equipmentRepository.findById(equipmentId);
 
-        if (equipmentDb.isPresent()) {
-            this.equipmentRepository.delete(equipmentDb.get());
-        } else {
-            throw new ApiRequestException("Equipment not found with id: " + equipmentId);
-        }
+            if (equipmentDb.isPresent()) {
+                this.equipmentRepository.delete(equipmentDb.get());
+            } else {
+                throw new ApiRequestException("Equipment not found with id: " + equipmentId);
+            }
     }
 }

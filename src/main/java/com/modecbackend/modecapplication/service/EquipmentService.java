@@ -7,12 +7,13 @@ import java.util.List;
 public interface EquipmentService {
     Equipment createEquipment(Equipment equipment, Long id) throws Exception;
 
-    Equipment updateEquipment(Equipment equipment);
+    Equipment updateEquipment(Equipment equipment, Long vesselId, Long id);
 
     List<Equipment> getAllEquipment(Long id);
 
-    Equipment getEquipmentById(long equipmentId);
+    Equipment getEquipmentById(Long equipmentId);
 
-    void deleteEquipment(long id);
+    void deleteEquipment(Long id, Long vesselId);
+
 }
 
