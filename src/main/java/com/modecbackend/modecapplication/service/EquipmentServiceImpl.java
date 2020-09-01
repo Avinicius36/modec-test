@@ -31,8 +31,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public Equipment updateEquipment(Equipment equipment) {
-        Optional<Equipment> equipmentDb = this.equipmentRepository.findById(equipment.getId());
+        List<Equipment> equipmentsToValidate = equipmentRepository.findAll();
+        validateNames(equipmentsToValidate, equipment.getCode());
 
+        Optional<Equipment> equipmentDb = this.equipmentRepository.findById(equipment.getId());
         if (equipmentDb.isPresent()) {
             Equipment equipmentUpdate = equipmentDb.get();
             equipmentUpdate.setId(equipment.getId());
@@ -40,9 +42,6 @@ public class EquipmentServiceImpl implements EquipmentService {
             equipmentUpdate.setCode(equipment.getCode());
             equipment.setLocation(equipment.getLocation());
 
-            List<Equipment> equipmentsToValidate = equipmentRepository.findAll();
-
-            validateNames(equipmentsToValidate, equipmentUpdate.getCode());
             equipmentRepository.save(equipmentUpdate);
 
             return equipmentUpdate;
