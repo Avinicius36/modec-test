@@ -40,11 +40,23 @@ public class EquipmentServiceImpl implements EquipmentService {
             equipmentUpdate.setCode(equipment.getCode());
             equipment.setLocation(equipment.getLocation());
 
+            List<Equipment> equipmentsToValidate = equipmentRepository.findAll();
+
+            validateNames(equipmentsToValidate, equipmentUpdate.getCode());
             equipmentRepository.save(equipmentUpdate);
 
             return equipmentUpdate;
         } else {
             throw new ApiRequestException("Equipment not found with id: " + equipment.getId());
+        }
+    }
+
+    private boolean validateNames(final List<Equipment> list, final String code) {
+        Boolean checkingIfNameIsPresent = list.stream().filter(o -> o.getCode().equals(code)).findFirst().isPresent();
+        if(checkingIfNameIsPresent == true) {
+            throw new ApiRequestException("This code already exists in Database, please consider changing the code");
+        } else {
+            return false;
         }
     }
 
