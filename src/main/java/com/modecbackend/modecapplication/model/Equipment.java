@@ -22,6 +22,9 @@ public class Equipment {
     @Enumerated(EnumType.STRING)
     private EquipmentStatus status;
 
+    @Column
+    private Long vesselId;
+
     public long getId() {
         return id;
     }
@@ -60,5 +63,13 @@ public class Equipment {
 
     public void setStatus(EquipmentStatus status) {
         this.status = status;
+    }
+
+    public Long getVesselId() {
+        return vesselId;
+    }
+
+    public void setVesselId(Long vesselId) {
+        this.vesselId = vesselId;
     }
 }

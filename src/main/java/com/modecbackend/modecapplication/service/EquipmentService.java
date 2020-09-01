@@ -5,11 +5,11 @@ import com.modecbackend.modecapplication.model.Equipment;
 import java.util.List;
 
 public interface EquipmentService {
-    Equipment createEquipment(Equipment equipment) throws Exception;
+    Equipment createEquipment(Equipment equipment, Long id) throws Exception;
 
     Equipment updateEquipment(Equipment equipment);
 
-    List<Equipment> getAllEquipment();
+    List<Equipment> getAllEquipment(Long id);
 
     Equipment getEquipmentById(long equipmentId);
 

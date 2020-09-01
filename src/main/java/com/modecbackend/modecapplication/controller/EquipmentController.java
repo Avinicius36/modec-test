@@ -5,6 +5,7 @@ import com.modecbackend.modecapplication.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,19 +17,19 @@ public class EquipmentController {
     @Autowired
     private EquipmentService equipmentService;
 
-    @GetMapping
-    public ResponseEntity<List<Equipment>> getAllEquipment() {
-        return ResponseEntity.ok().body(equipmentService.getAllEquipment());
+    @GetMapping("/{vessel-id}")
+    public List<Equipment> getAllEquipment(@NonNull @PathVariable (value = "vessel-id") final Long vesselId) {
+        return equipmentService.getAllEquipment(vesselId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{vessel-id}/{id}")
     public ResponseEntity<Equipment> getEquipmentById(@PathVariable Long id) {
         return ResponseEntity.ok().body(equipmentService.getEquipmentById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Equipment> createEquipment(@RequestBody Equipment equipment) throws Exception {
-        return ResponseEntity.ok().body(this.equipmentService.createEquipment(equipment));
+    @PostMapping("/{vessel-id}")
+    public Equipment createEquipment(@NonNull @RequestBody Equipment equipment, @NonNull @PathVariable(value = "vessel-id") final long vesselId) throws Exception {
+        return this.equipmentService.createEquipment(equipment, vesselId);
     }
 
     @PutMapping("/{id}")
